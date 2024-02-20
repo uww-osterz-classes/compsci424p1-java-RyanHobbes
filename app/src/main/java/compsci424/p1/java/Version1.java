@@ -3,6 +3,8 @@
  */
 package compsci424.p1.java;
 
+import java.util.LinkedList;
+
 /** 
  * Implements the process creation hierarchy for Version 1, which uses
  * linked lists.
@@ -15,16 +17,37 @@ package compsci424.p1.java;
  */
 public class Version1 {
     // Declare any class/instance variables that you need here.
-
+		private static int lastAssignedPIndex = -1;
+	 	private int pIndex;
+	    private LinkedList<Version1PCB> children; //list of all pcb - different name
     /**
      * Default constructor. Use this to allocate (if needed) and
      * initialize the PCB array, create the PCB for process 0, and do
      * any other initialization that is needed. 
      */
-    public Version1() {
+	   public Version1() {
+		   lastAssignedPIndex++;
+		   pIndex = lastAssignedPIndex;
+		   children = new LinkedList<>();
+	        Version1PCB pcb0 = new Version1PCB(0);
+	        this.children.addFirst(pcb0);
+	    }
+	   // Setters and getters
+	    public int getPIndex() {
+	        return pIndex;
+	    }
 
-    }
+	    public void setPIndex(int pIndex) {
+	        this.pIndex = pIndex;
+	    }
 
+	    public LinkedList<Version1PCB> getChildren() {
+	        return children;
+	    }
+
+	    public void setChildren(LinkedList<Version1PCB> children) {
+	        this.children = children;
+	    }
     /**
      * Creates a new child process of the process with ID parentPid. 
      * @param parentPid the PID of the new process's parent
@@ -34,14 +57,37 @@ public class Version1 {
         // If parentPid is not in the process hierarchy, do nothing; 
         // your code may return an error code or message in this case,
         // but it should not halt
+    	boolean flag = false;
+    	for (int i = 0; i < children.size(); i++) {
+    		if (children.get(i).getProcessId() == parentPid) {
+    			flag = true;
+    			break;
+    			}
+    		}
+    	if (flag == false) {
+    			System.out.println("ERROR - Parent ID not found");
+    			return -1;    		
+    	}
+    	
+
 
         // Assuming you've found the PCB for parentPid in the PCB array:
         // 1. Allocate and initialize a free PCB object from the array
         //    of PCB objects
-
+    	Version1PCB obj = new Version1PCB(parentPid);
         // 2. Insert the newly allocated PCB object into parentPid's
         //    list of children
-
+    	
+    	Version1PCB parentPCB = Version1PCB.findParent(parentPid,children); //ask how to access the parent linked list
+    	
+    	if (parentPCB != null) {
+    		parentPCB.addChild(lastAssignedPIndex++);// ask about what to make child id
+    	}
+    	else {
+    		System.out.println("ERROR - Parent PCB not found");
+    		return-1
+    	}
+    	
         // You can decide what the return value(s), if any, should be.
         // If you change the return type/value(s), update the Javadoc.
         return 0; // often means "success" or "terminated normally"
@@ -57,7 +103,8 @@ public class Version1 {
          // If targetPid is not in the process hierarchy, do nothing; 
          // your code may return an error code or message in this case,
          // but it should not halt
-
+    	findProcess(targetPid);
+    		if (targetPCB)
          // Assuming you've found the PCB for targetPid in the PCB array:
          // 1. Recursively destroy all descendants of targetPid, if it
          //    has any, and mark their PCBs as "free" in the PCB array 
