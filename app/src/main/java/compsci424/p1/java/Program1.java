@@ -8,7 +8,7 @@
  * problem and display your solution in the correct format.
  */
 
-package compsci424;
+package compsci424.p1.java;
 
 import java.util.Scanner;
 
@@ -39,17 +39,17 @@ public class Program1 {
 		// 1. Ask the user to enter commands of the form "create N",
 		// "destroy N", or "end", where N is an integer between 0
 		// and 15.
-		System.out.println("Please enter a command:\n" + "create N \n destroy N\n end\n N can be 0-15");
+		System.out.println("Please enter a command:\n" + "create N\ndestroy N\nend\nN can be 0-15");
 		userInput = myscan.next();
 		// 2. While the user has not typed "end", continue accepting
 		// commands. Add each command to a list of actions to take
 		// while you run the simulation.
-		while (userInput != "end") {
-			if (userInput == "create") {
+		while (!userInput.equals("end")) {
+			if (userInput.equals("create")) {
 				userNum = myscan.nextInt();
 				cmdList += userInput + userNum + "\n";
 				userInput = myscan.next();
-			} else if (userInput == "destroy") {
+			} else if (userInput.equals("destroy")) {
 				userNum = myscan.nextInt();
 				cmdList += userInput + userNum + "\n";
 				userInput = myscan.next();
@@ -72,10 +72,10 @@ public class Program1 {
 		Scanner myscan1 = new Scanner(cmdList);
 		while (myscan1.hasNext()) {
 			tmpcmd = myscan1.next();
-			if (tmpcmd == "create") {
+			if (tmpcmd.equals("create")) {
 				Ver1.create(myscan1.nextInt());
 				Ver1.showProcessInfo();
-			} else if (tmpcmd == "destroy") {
+			} else if (tmpcmd.equals("destroy")) {
 				Ver1.destroy(myscan1.nextInt());
 				Ver1.showProcessInfo();
 			}
@@ -87,10 +87,10 @@ public class Program1 {
 		Scanner myscan2 = new Scanner(cmdList);
 		while (myscan2.hasNext()) {
 			tmpcmd = myscan2.next();
-			if (tmpcmd == "create") {
+			if (tmpcmd.equals("create")) {
 				Ver2.create(myscan2.nextInt());
 				Ver2.showProcessInfo();
-			} else if (tmpcmd == "destroy") {
+			} else if (tmpcmd.equals("destroy")) {
 				Ver2.destroy(myscan2.nextInt());
 				Ver2.showProcessInfo();
 			}
@@ -104,9 +104,9 @@ public class Program1 {
 			Scanner myscan3 = new Scanner(cmdList);
 			while (myscan3.hasNext()) {
 				tmpcmd = myscan3.next();
-				if (tmpcmd == "create") {
+				if (tmpcmd.equals("create")) {
 					Ver1.create(myscan3.nextInt());
-				} else if (tmpcmd == "destroy") {
+				} else if (tmpcmd.equals("destroy")) {
 					Ver1.destroy(myscan3.nextInt());
 				}
 			}
@@ -128,9 +128,9 @@ public class Program1 {
 			Scanner myscan4 = new Scanner(cmdList);
 			while (myscan4.hasNext()) {
 				tmpcmd = myscan4.next();
-				if (tmpcmd == "create") {
+				if (tmpcmd.equals("create")) {
 					Ver2.create(myscan4.nextInt());
-				} else if (tmpcmd == "destroy") {
+				} else if (tmpcmd.equals("destroy")) {
 					Ver2.destroy(myscan4.nextInt());
 				}
 			}

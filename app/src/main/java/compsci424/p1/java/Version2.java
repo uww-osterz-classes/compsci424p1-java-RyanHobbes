@@ -1,7 +1,7 @@
 /* COMPSCI 424 Program 1
  * Name:
  */
-package compsci424;
+package compsci424.p1.java;
 
 /**
  * Implements the process creation hierarchy for Version 2, which does not use

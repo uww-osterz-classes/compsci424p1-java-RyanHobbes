@@ -58,12 +58,12 @@ public class Version1 {
         // your code may return an error code or message in this case,
         // but it should not halt
     	boolean flag = false;
-    	for (int i = 0; i < children.size(); i++) {
-    		if (children.get(i).getProcessId() == parentPid) {
-    			flag = true;
-    			break;
-    			}
-    		}
+    	 for (Version1PCB pcb : children) {
+    	        if (pcb.getProcessId() == parentPid) {
+    	            flag = true;
+    	            break;
+    	        }
+    	    }
     	if (flag == false) {
     			System.out.println("ERROR - Parent ID not found");
     			return -1;    		
@@ -74,18 +74,20 @@ public class Version1 {
         // Assuming you've found the PCB for parentPid in the PCB array:
         // 1. Allocate and initialize a free PCB object from the array
         //    of PCB objects
-    	Version1PCB obj = new Version1PCB(parentPid);
+    	Version1PCB newPCB = new Version1PCB(parentPid);
+    	newPCB.setProcessId(++lastAssignedPIndex);
         // 2. Insert the newly allocated PCB object into parentPid's
         //    list of children
     	
-    	Version1PCB parentPCB = Version1PCB.findParent(parentPid,children); //ask how to access the parent linked list
+    	Version1PCB parentPCB = Version1PCB.findParent(parentPid,children);
     	
     	if (parentPCB != null) {
-    		parentPCB.addChild(lastAssignedPIndex++);// ask about what to make child id
+    		parentPCB.addChild(newPCB.getProcessId());
+    		children.add(newPCB);
     	}
     	else {
     		System.out.println("ERROR - Parent PCB not found");
-    		return-1
+    		return-1;
     	}
     	
         // You can decide what the return value(s), if any, should be.
@@ -103,21 +105,49 @@ public class Version1 {
          // If targetPid is not in the process hierarchy, do nothing; 
          // your code may return an error code or message in this case,
          // but it should not halt
-    	findProcess(targetPid);
-    		if (targetPCB)
+    	boolean flag = false;
+    	for (Version1PCB pcb : children) {
+    		if (pcb.getProcessId() == targetPid) {
+    			flag = true;
+    			break;
+    		}
+    	}
+    	if (!flag) {
+    		System.out.println("ERROR - Target PCB not found");
+    		return -2;
+    	}
+    		
          // Assuming you've found the PCB for targetPid in the PCB array:
          // 1. Recursively destroy all descendants of targetPid, if it
          //    has any, and mark their PCBs as "free" in the PCB array 
          //    (i.e., deallocate them)
-
+    	destroyDescendants(targetPid);
          // 2. Remove targetPid from its parent's list of children
-
+    	removeChildFromParent(targetPid);
          // 3. Deallocate targetPid's PCB and mark its PCB array entry
          //    as "free"
 
          // You can decide what the return value(s), if any, should be.
          // If you change the return type/value(s), update the Javadoc.
         return 0; // often means "success" or "terminated normally"
+    }
+    private  void destroyDescendants(int targetPid) {
+    	Version1PCB targetPCB = Version1PCB.findProcess(targetPid, children);
+    	if (targetPCB != null) {
+    		LinkedList<Integer> childrenIDs = targetPCB.getChildren();
+    		for (Integer childPid : childrenIDs) {
+    			destroyDescendants(childPid);
+    		}
+    	}
+    }
+    private void removeChildFromParent(int targetPid) {
+    	for (Version1PCB pcb : children) {
+    		LinkedList<Integer> childrenIDs = pcb.getChildren();    	
+    		if (childrenIDs.contains(targetPid)) {
+    			childrenIDs.remove((Integer)targetPid);
+    			break;
+    		}
+    	}
     }
 
     /**

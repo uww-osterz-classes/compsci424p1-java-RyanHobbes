@@ -1,7 +1,7 @@
 /* COMPSCI 424 Program 1
  * Name:
  */
-package compsci424;
+package compsci424.p1.java;
 
 import java.util.LinkedList;
 
@@ -61,12 +61,14 @@ public class Version1PCB {
 	        }
 	        return null;
 	    }
-	    public static Version1PCB findProcess(int processId, Version1PCB ) { //ask how to access the global linked list
-	    	for (Version1PCB pcb : pcbArray) {
+	    public static Version1PCB findProcess(int processId, LinkedList<Version1PCB> list ) { //ask how to access the global linked list
+	    	for (Version1PCB pcb : list) {
 	    		if (pcb.getProcessId() == processId) {
 	    	
 	    		return pcb;
 	    	}
-		    return null;
 	    }
+			return null;
 	  }
+	 
+}
