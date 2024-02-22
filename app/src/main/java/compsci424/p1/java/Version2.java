@@ -39,7 +39,7 @@ public class Version2 {
 		// but it should not halt
 		boolean flag = false;
 		for (Version2PCB pcb : pcbArray) {
-			if (pcb.getParentId() == parentPid && pcb != null) {
+			if (pcb != null && pcb.getParentId() == parentPid) {
 				flag = true;
 				break;
 			}
@@ -153,7 +153,22 @@ public class Version2 {
 	 * to return the text to the main program for printing. It's your choice.
 	 */
 	void showProcessInfo() {
-
+	    for (int i = 0; i < pcbArray.length; i++) {
+	        Version2PCB pcb = pcbArray[i];
+	        if (pcb != null) {
+	            int parentId = pcb.getParentId();
+	            int firstChild = pcb.getFirstChild();
+	            System.out.print("Process " + i + ": parent is " + parentId + " and children are ");
+	            //check all children
+	            int currentChild = firstChild;
+	            while (currentChild != 0) {
+	                System.out.print(currentChild + " ");
+	                currentChild = pcbArray[currentChild].getYoungerSibling();
+	            }
+	            System.out.println();
+	        }
+	    }
+	    System.out.println();
 	}
 
 	/* If you need or want more methods, feel free to add them. */

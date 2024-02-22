@@ -47,11 +47,11 @@ public class Program1 {
 		while (!userInput.equals("end")) {
 			if (userInput.equals("create")) {
 				userNum = myscan.nextInt();
-				cmdList += userInput + userNum + "\n";
+				cmdList += userInput + " " + userNum + "\n";
 				userInput = myscan.next();
 			} else if (userInput.equals("destroy")) {
 				userNum = myscan.nextInt();
-				cmdList += userInput + userNum + "\n";
+				cmdList += userInput + " " + userNum + "\n";
 				userInput = myscan.next();
 			}
 		}
