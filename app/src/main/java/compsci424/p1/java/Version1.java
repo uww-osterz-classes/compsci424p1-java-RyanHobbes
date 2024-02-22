@@ -161,7 +161,14 @@ public class Version1 {
      * the main program for printing. It's your choice. 
      */
     void showProcessInfo() {
-
+    	for (Version1PCB pcb : children) {
+    		LinkedList <Integer> childrenIds = pcb.getChildren();
+    		System.out.println("Process " + pcb.getProcessId() + ": parent is " + pcb.getParentId() + " and children are " );
+    		for (Integer childID : childrenIds) {
+    			System.out.println(childID + " ");
+    		}
+    		System.out.println();
+    	}
     }
 
     /* If you need or want more methods, feel free to add them. */

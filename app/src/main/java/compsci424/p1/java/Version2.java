@@ -15,14 +15,15 @@ package compsci424.p1.java;
  */
 public class Version2 {
 	// Declare any class/instance variables that you need here.
-
+	private static int lastAssignedPIndex = -1;
+		Version2PCB[] pcbArray;
 	/**
 	 * Default constructor. Use this to allocate (if needed) and initialize the PCB
 	 * array, create the PCB for process 0, and do any other initialization that is
 	 * needed.
 	 */
 	public Version2() {
-
+		pcbArray = new  Version2PCB[20];
 	}
 
 	/**
@@ -36,14 +37,50 @@ public class Version2 {
 		// If parentPid is not in the process hierarchy, do nothing;
 		// your code may return an error code or message in this case,
 		// but it should not halt
+		boolean flag = false;
+		for (Version2PCB pcb : pcbArray) {
+			if (pcb.getParentId() == parentPid && pcb != null) {
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) {
+			System.out.println("ERROR - Parent ID not found");
+			return -1;  
+			}
+		//check for open spots******************
 
+		   int openSpotIndex = -1;
+		    for (int i = 0; i < pcbArray.length; i++) {
+		        if (pcbArray[i] == null) {
+		            openSpotIndex = i;
+		            break;
+		        }
+		    }
+		    if (openSpotIndex == -1) {
+		        System.out.println("ERROR - PCB array is full");
+		        return -2; // PCB array is full
+		    }
 		// Assuming you've found the PCB for parentPid in the PCB array:
 		// 1. Allocate and initialize a free PCB object from the array
 		// of PCB objects
-
+		    Version2PCB newPCB = new Version2PCB(parentPid);
+		    pcbArray[openSpotIndex] = newPCB;
 		// 2. Connect the new PCB object to its parent, its older
 		// sibling (if any), and its younger sibling (if any)
-
+		    Version2PCB parentPCB = pcbArray[parentPid];
+		    if (parentPCB.getFirstChild() == -1) {
+		    	parentPCB.setFirstChild(openSpotIndex);
+		    }
+		    else {
+		        int youngestSiblingIndex = parentPCB.getFirstChild();
+		        Version2PCB youngestSibling = pcbArray[youngestSiblingIndex];
+		        while (youngestSibling.getYoungerSibling() != -1) {
+		            youngestSiblingIndex = youngestSibling.getYoungerSibling();
+		            youngestSibling = pcbArray[youngestSiblingIndex];
+		        }
+		        youngestSibling.setYoungerSibling(openSpotIndex);
+		    }
 		// You can decide what the return value(s), if any, should be.
 		// If you change the return type/value(s), update the Javadoc.
 		return 0; // often means "success" or "terminated normally"
@@ -61,21 +98,50 @@ public class Version2 {
 		// If targetPid is not in the process hierarchy, do nothing;
 		// your code may return an error code or message in this case,
 		// but it should not halt
+		if (pcbArray[targetPid].equals(null)) {
+	        System.out.println("ERROR - PCB not in array");
+	        return -3;
+			}
 
 		// Assuming you've found the PCB for targetPid in the PCB array:
 		// 1. Recursively destroy all descendants of targetPid, if it
 		// has any, and mark their PCBs as "free" in the PCB array
 		// (i.e., deallocate them)
-
+		destroyDescendantsRecur(targetPid);
 		// 2. Adjust connections within the hierarchy graph as needed to
 		// re-connect the graph
+		int parentPid = pcbArray[targetPid].getParentId();
+	    int firstChild = pcbArray[parentPid].getFirstChild();
+	    int prevSibling = -1;
+	    int currentPid = firstChild;
+	    
+	    while (currentPid != targetPid) {
+	        prevSibling = currentPid;
+	        currentPid = pcbArray[currentPid].getYoungerSibling();
+	    }
+
+	    if (prevSibling != -1) {
+	        pcbArray[prevSibling].setYoungerSibling(pcbArray[targetPid].getYoungerSibling());
+	    } else {
+	        pcbArray[parentPid].setFirstChild(pcbArray[targetPid].getYoungerSibling());
+	    }
 
 		// 3. Deallocate targetPid's PCB and mark its PCB array entry
 		// as "free"
-
+	    pcbArray[targetPid] = null;
 		// You can decide what the return value(s), if any, should be.
 		// If you change the return type/value(s), update the Javadoc.
 		return 0; // often means "success" or "terminated normally"
+	}
+	void destroyDescendantsRecur(int pid) {
+	    if (pid == -1) {//base case
+	        return;
+	    }
+	    //recursive step
+	    Version2PCB pcb = pcbArray[pid];
+	    destroyDescendantsRecur(pcb.getFirstChild());
+	    pcbArray[pid] = null; //mark free
+	    destroyDescendantsRecur(pcb.getYoungerSibling());// clear all younger of first child
 	}
 
 	/**
