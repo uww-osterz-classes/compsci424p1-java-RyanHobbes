@@ -24,6 +24,8 @@ public class Version2 {
 	 */
 	public Version2() {
 		pcbArray = new  Version2PCB[20];
+		Version2PCB rootPCB = new Version2PCB(0);// create root process
+		pcbArray[0] = rootPCB;
 	}
 
 	/**
